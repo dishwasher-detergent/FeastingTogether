@@ -7,7 +7,7 @@ export default function HowItWorks()
 				<figure className="border border-gray-300 rounded-2xl overflow-hidden">
 					<figcaption className="py-3 px-4 bg-white">
 						<p className="font-magic text-3xl font-medium text-gray-900 mb-1">
-							First
+							Create
 						</p>
 						<p className="text-lg text-gray-500 h-32 md:h-40">
 							A single person will start the session based on their location and distribute the unique token to all participants.
@@ -22,7 +22,7 @@ export default function HowItWorks()
 				<figure className="border border-gray-300 rounded-2xl overflow-hidden">
 					<figcaption className="py-3 px-4 bg-white">
 						<p className="font-magic text-3xl font-medium text-gray-900 mb-1">
-							Second
+							Invite
 						</p>
 						<p className="text-lg text-gray-500 h-32 md:h-40">
 							Once everyone has joined it will randomly give you different restaurants within a previously determind distance.
@@ -37,7 +37,7 @@ export default function HowItWorks()
 				<figure className="border border-gray-300 rounded-2xl overflow-hidden">
 					<figcaption className="py-3 px-4 bg-white">
 						<p className="font-magic text-3xl font-medium text-gray-900 mb-1">
-							Third
+							Feast
 						</p>
 						<p className="text-lg text-gray-500 h-32 md:h-40">
 							Once one restuarant has all participants likes, the session will end. Now you're ready to eat!

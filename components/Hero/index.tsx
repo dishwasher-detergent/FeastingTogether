@@ -4,9 +4,9 @@ export default function Hero()
 {
 	return (
 		<div className="py-6 md:py-24 lg:py-36 px-4 md:px-8 w-full flex flex-col">
-			<div className="w-full mb-10 md:mb-16 lg:mb-24">
+			<div className="w-full mb-20 md:mb-20 lg:mb-24">
 				<header>
-					<h1 className="font-magic mb-12 text-6xl md:text-8xl lg:text-9xl font-bold">
+					<h1 className="font-magic mb-12 text-6xl md:text-9xl font-bold">
 						Feasting Together
 					</h1>
 				</header>
