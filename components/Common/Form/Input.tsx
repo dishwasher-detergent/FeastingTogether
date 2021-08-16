@@ -1,4 +1,4 @@
-import { Component } from "react"
+import React from "react"
 
 interface inputProps
 {
@@ -9,17 +9,14 @@ interface inputProps
 	onChangeValue?: any
 }
 
-class Input extends Component<inputProps>
+const Input: React.FC<inputProps> = ({ value , onChangeValue, title, placeholder, type}) => 
 {
-	render()
-	{
-		return (
-			<label className="block w-full">
-				<p className="ml-4 mb-1 text-sm font-bold text-gray-500">{this.props.title}</p>
-				<input value={this.props.value} onChange={this.props.onChangeValue} placeholder={this.props.placeholder} type={this.props.type} className="w-full border border-gray-300 rounded-xl focus:border-blue-600 px-4 py-2 outline-none"/>
-			</label>
-		)
-	}
+	return (
+		<label className="block w-full">
+			<p className="ml-4 mb-1 text-sm font-bold text-gray-500">{title}</p>
+			<input value={value} onChange={onChangeValue} placeholder={placeholder} type={type} className="w-full border border-gray-300 rounded-xl focus:border-blue-600 px-4 py-2 outline-none"/>
+		</label>
+	)
 }
 
 export default Input;

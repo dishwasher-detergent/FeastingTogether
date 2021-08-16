@@ -4,6 +4,8 @@ import Input from '../../components/Common/Form/Input'
 import Radio from '../../components/Common/Form/Radio'
 import Steps from '../../components/Common/Form/Steps'
 import Link from 'next/link'
+import Layout from '../../components/Common/Layout'
+import { supabase } from '../../utils/supabaseClient'
 
 class create extends Component<{},any>
 {
@@ -24,9 +26,25 @@ class create extends Component<{},any>
 
 	handleChangePrice = (e: { target: { value: any; }; }) => this.setState({price: e.target.value});
 
+	createSession = async () => {
+		try {
+			const { data, error } = await supabase
+  				.rpc('create_session', {
+					session_id_size: 6,
+					creator: this.state.name,
+					location: this.state.from,
+					price: this.state.price
+				})
+			if (error) throw error
+				
+		} catch (error) {
+			console.log(error)
+		}
+	}	
+
 	render(){
 		return (
-			<>
+			<Layout nav={false} footer={false}>
 				<Head>
 					<title>Creating Session</title>
 				</Head>
@@ -40,11 +58,12 @@ class create extends Component<{},any>
 						<Input onChangeValue={this.handleChangeFrom} value={this.state.from} title="Where are you from?" type="text"/>
 						<Radio onChangeValue={this.handleChangePrice} value={this.state.price} title="How much are we looking to spend?" radios={['$','$$','$$$','$$$$']} group="cost"/>
 						<div className="w-full flex flex-col md:flex-row-reverse justify-center md:justify-start items-center">
-							<Link href="/App/Invite">
+							{/* <Link href="/App/Invite">
 								<a className="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold">
 									Next
 								</a>
-							</Link>
+							</Link> */}
+							<button onClick={this.createSession}>Test</button>
 							<Link href="/">
 								<a className="px-4 py-2 rounded-2xl text-gray-900 font-semibold">
 									Cancel
@@ -53,7 +72,7 @@ class create extends Component<{},any>
 						</div>
 					</div>
 				</div>
-			</>
+			</Layout>
 		)
 	}
 }

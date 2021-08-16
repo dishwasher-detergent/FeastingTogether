@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import Head from 'next/head'
+import Layout from '../../components/Common/Layout'
 
 class Decide extends Component<{},any>
 {
@@ -13,7 +14,7 @@ class Decide extends Component<{},any>
 
 	render(){
 		return (
-			<>
+			<Layout nav={false} footer={false}>
 				<Head>
 					<title>Start Swiping!</title>
 				</Head>
@@ -101,7 +102,7 @@ class Decide extends Component<{},any>
 						</div>
 					</div>
 				</div>
-			</>
+			</Layout>
 		)
 	}
 }

@@ -2,6 +2,7 @@ import { Component } from 'react'
 import Head from 'next/head'
 import Steps from '../../components/Common/Form/Steps'
 import Link from 'next/link'
+import Layout from '../../components/Common/Layout'
 
 class Invite extends Component<{},any>
 {
@@ -15,7 +16,7 @@ class Invite extends Component<{},any>
 
 	render(){
 		return (
-			<>
+			<Layout nav={false} footer={false}>
 				<Head>
 					<title>Invite Friends!</title>
 				</Head>
@@ -58,7 +59,7 @@ class Invite extends Component<{},any>
 						</div>
 					</div>
 				</div>
-			</>
+			</Layout>
 		)
 	}
 }
