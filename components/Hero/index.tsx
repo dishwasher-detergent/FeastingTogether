@@ -20,7 +20,7 @@ export default function Hero()
 						Create Your Own
 					</a>
 				</Link>
-				<Link href="/">
+				<Link href="/App/Join">
 					<a className="px-4 py-2 rounded-2xl text-gray-900 font-semibold">
 						Join A Friend
 					</a>
