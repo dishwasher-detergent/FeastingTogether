@@ -16,6 +16,7 @@ const Create: React.FC = () => {
 	const [price, setPrice] = useState('$');
 	const [position, setPosition] = useState(0);
 	const [steps, setSteps] = useState(['Setup','Invite']);
+	const [warning, setWarning] = useState('');
 
 	const { set, session_id } = useSession.getState();
 
@@ -54,6 +55,9 @@ const Create: React.FC = () => {
 	}
 
 	const createSession = async () => {
+		if(name.length <= 0){setWarning('Missing Name'); return} 
+		if(from.length <= 0){setWarning('Missing Location'); return}
+
 		try {
 			const { data, error } = await supabase
 			.rpc('create_session', {
@@ -80,6 +84,7 @@ const Create: React.FC = () => {
 
 				</div>
 				<div className="-m-6 p-4 w-full max-w-lg space-y-6 bg-white rounded-2xl shadow">
+					{(warning ? <p className="w-full py-2 px-4 bg-red-600 text-white rounded-2xl">{warning}</p> : null)}
 					<Input onChangeValue={handleChangeName} value={name} title="Who are you?" type="text"/>
 					<Input onChangeValue={handleChangeFrom} value={from} title="Where are you from?" type="text"/>
 					<Radio onChangeValue={handleChangePrice} value={price} title="How much are we looking to spend?" radios={['$','$$','$$$','$$$$']} group="cost"/>
