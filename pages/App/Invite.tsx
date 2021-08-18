@@ -11,7 +11,7 @@ import { useRouter  } from 'next/router';
 const Invite: React.FC = () => {
 	const [position, setPosition] = useState(1);
 	const [steps, setSteps] = useState(['Setup','Invite']);
-	const [users, setUsers] = useState([]);
+	const [users, setUsers] = useState<any[]>([]);
 
 	const mountedRef = useRef(false)
 
