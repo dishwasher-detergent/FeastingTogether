@@ -40,7 +40,7 @@ export default function HowItWorks()
 							Feast
 						</p>
 						<p className="text-lg text-gray-500 h-32 md:h-40">
-							Once one restuarant has all participants likes, the session will end. Now you're ready to eat!
+							Once one restuarant has all participants likes, the session will end. Now you&apos;re ready to eat!
 						</p>
 					</figcaption>
 					<div className="relative bg-gray-100 pt-48 overflow-hidden">
