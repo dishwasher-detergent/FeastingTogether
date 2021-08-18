@@ -12,13 +12,21 @@ const Layout: React.FC<inputProps> = ({ children, nav , footer }) =>
 {
 	return (
 		<>
-		<div className="flex-1">
-			{(nav ? <Nav /> : null)}
-			<div className="px-4">
+		{(footer && nav ? 
+			<div className="flex flex-col max-w-7xl mx-auto min-h-screen relative bg-gray-50">
+				<div className="flex-1">
+					<Nav />
+					<div className="px-4">
+						{children}
+					</div>
+				</div>
+				<Footer /> 
+			</div>
+		: 
+			<div className="h-screen">
 				{children}
 			</div>
-		</div>
-		{(footer ? <Footer /> : null)}
+		)}
 		</>
 	)
 }

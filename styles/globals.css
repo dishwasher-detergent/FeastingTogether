@@ -8,3 +8,7 @@
     src: url(../public/Fonts/LetterMagic.otf)
   }
 }
+
+html {
+  @apply bg-gray-50;
+}

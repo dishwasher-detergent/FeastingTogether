@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Input from '../../components/Common/Form/Input';
 import InviteCode from '../../components/Common/Form/InviteCode';
 import Layout from '../../components/Common/Layout'
+import Card from '../../components/Common/Card'
 import useSession from '../../global-store/useSession';
 import { supabase } from '../../utils/supabaseClient';
 import { useRouter  } from 'next/router';
@@ -15,7 +16,7 @@ const Join: React.FC = () => {
 	const [name, setName] = useState('');
 	const [session, setSession] = useState('000000');
 	const [error, setError] = useState('');
-	const [warning, setWarning] = useState('');
+	const [nameWarning, setNameWarning] = useState(false)
 
 	const { set, session_id, user_id } = useSession.getState();
 
@@ -32,14 +33,14 @@ const Join: React.FC = () => {
 			.eq('id', session)
 			.neq('finished', true)
 			if (error) throw error
-			return result.length
+			return result!.length
 		} catch (error:any) {
 			setError(error)
 		}
 	}
 
 	const addParticipant = async () => {
-		if(name.length <= 0){setWarning('Missing Name'); return} 
+		if(name.length <= 0){setNameWarning(true); return} 
 
 		if(await checkCode()){
 			try {
@@ -52,7 +53,7 @@ const Join: React.FC = () => {
 					},
 				])
 				if (error) throw error
-				set({session_id: session, user_id: data[0].id, user: name})
+				set({session_id: session, user_id: data![0].id, user: name})
 				router.push('/App/Invite')
 			} catch (error:any) {
 				setError(error)
@@ -67,11 +68,9 @@ const Join: React.FC = () => {
 			<Head>
 				<title>Invite Friends!</title>
 			</Head>
-			<Steps position={position} steps={steps} />
-			<div className="w-full flex flex-col items-center justify-center pb-12">
+			<Card position={position} steps={steps}>
 				<div className="p-4 w-full max-w-lg space-y-6 bg-white rounded-2xl shadow">
-					{(warning ? <p className="w-full py-2 px-4 bg-red-600 text-white rounded-2xl">{warning}</p> : null)}
-					<Input onChangeValue={handleChangeName} value={name} title="Who are you?" type="text"/>
+					<Input onChangeValue={handleChangeName} value={name} title="Who are you?" type="text" warning={nameWarning}/>
 					<InviteCode onChangeValue={handleChangeSession} value={session} title="What's your invite code?" type="text"/>
 					<div className="w-full flex flex-col md:flex-row-reverse justify-center md:justify-start items-center">
 						<button className="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold" onClick={addParticipant}>Join</button>
@@ -82,7 +81,7 @@ const Join: React.FC = () => {
 						</Link>
 					</div>
 				</div>
-			</div>
+			</Card>
 		</Layout>
 	)
 }

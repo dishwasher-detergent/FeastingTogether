@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import Layout from '../../components/Common/Layout';
 import useSession from '../../global-store/useSession';
@@ -8,52 +8,47 @@ import { useRouter  } from 'next/router';
 const Decide: React.FC = () => {
 	const { set, session_id, user_id } = useSession.getState();
 
-	const mountedRef = useRef(false)
-
 	const router = useRouter()
 
 	useEffect(() => {
-		mountedRef.current = true
-
-		fetchLiked()
-		const liked = supabase
-		.from(`participants:session_id=eq.${session_id}`)
-		.on('*', payload => {
-			if (mountedRef.current) {
-				fetchLiked()
-			}
-		})
-		.subscribe()
+		fetchLiked
 		return function cleanup() {
 			supabase.removeSubscription(liked)
-			mountedRef.current = false
 		};
-	});
+	},[]);
 
-	const fetchLiked = async() => {
+	const fetchLiked = async () => {
 		try {
 			const { data: participants, error } = await supabase
 			.from('participants')
 			.select('liked')
 			.eq('session_id', session_id)
 			if (error) throw error
+			console.log('test')
 			detectMatch(participants)
 		} catch (error) {
 			console.log(error)
 		}
 	}
 
+	const liked = supabase
+	.from(`participants:session_id=eq.${session_id}`)
+	.on('*', fetchLiked)
+	.subscribe()
+
 	const detectMatch = (value: any) => {
+		console.log('test')
 		let array:string[] = []
 		value.forEach((e: any)=>{
-			array.push(e.liked)
+			if(e.liked != null){
+				array.push(e.liked)
+			}
 		})
+
 		if(array.length > 1){
 			let match = intersection(array);
-			console.log(match.length)
 			if(match.length > 0){
 				setFinished()
-				router.push('/App/test')
 			}
 		}
 	}
@@ -68,8 +63,18 @@ const Decide: React.FC = () => {
 		return result;
 	}
 
-	const setFinished = () => {
-		
+	const setFinished = async () => {
+		try {
+			const { data, error } = await supabase
+			.from('session')
+			.update({ finished: true })
+			.match({ id: session_id })
+			if (error) throw error
+			router.push('test')
+		} catch (error) {
+			console.log(error)
+		}
+
 	}
 
 	const handleDislike = () => {

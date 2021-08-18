@@ -3,8 +3,10 @@ import Head from 'next/head'
 import Steps from '../../components/Common/Form/Steps'
 import Link from 'next/link'
 import Layout from '../../components/Common/Layout'
+import Card from '../../components/Common/Card'
 import useSession from '../../global-store/useSession';
 import { supabase } from '../../utils/supabaseClient';
+import { useRouter  } from 'next/router';
 
 const Invite: React.FC = () => {
 	const [position, setPosition] = useState(1);
@@ -13,10 +15,13 @@ const Invite: React.FC = () => {
 
 	const mountedRef = useRef(false)
 
+	const router = useRouter()
+
 	const { set, session_id, user_id, creator } = useSession.getState();
 
 	useEffect(() => {
 		mountedRef.current = true
+		checkSession()
 
 		fetchParticipants()
 		const participants = supabase
@@ -25,11 +30,48 @@ const Invite: React.FC = () => {
 			fetchParticipants()
 		})
 		.subscribe()
+
+		const started = supabase
+		.from(`session:id=eq.${session_id}`)
+		.on('UPDATE', payload => {
+			checkSession()
+		})
+		.subscribe()
 		return () => {
 			supabase.removeSubscription(participants);
+			supabase.removeSubscription(started);
 			mountedRef.current = false
 		};
 	});
+
+	const startSession = async () => {
+		try {
+			const { data, error } = await supabase
+			.from('session')
+			.update({ started: true })
+			.match({ id: session_id })
+			if (error) throw error
+			router.push('/App/Decide')
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const checkSession = async () => {
+		try {
+			const { data: results, error } = await supabase
+			.from('session')
+			.select('started')
+			.eq('id', session_id)
+			.neq('finished', true)
+			if (error) throw error
+			if(results![0].started){
+				router.push('/App/Decide')
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	const fetchParticipants = async () => {
 		try {
@@ -37,10 +79,24 @@ const Invite: React.FC = () => {
 			.from('participants')
 			.select('user')
 			.eq('session_id', session_id)
+			.neq('left', true)
 			if (error) throw error
 			if (mountedRef.current) {
 				setUsers(participants)
 			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const participantLeft = async () => {
+		try {
+			const { data, error } = await supabase
+			.from('participants')
+			.update({ left: true })
+			.match({ id: user_id })
+			if (error) throw error
+			router.push('/')
 		} catch (error) {
 			console.log(error)
 		}
@@ -51,9 +107,8 @@ const Invite: React.FC = () => {
 			<Head>
 				<title>Invite Friends!</title>
 			</Head>
-			<Steps position={position} steps={steps} />
-			<div className="w-full flex flex-col items-center justify-center pb-12">
-				<div className="p-4 w-full max-w-lg space-y-6 bg-white rounded-2xl shadow">
+				<Card position={position} steps={steps}>
+					<div className="p-4 w-full space-y-6 bg-white rounded-2xl">
 					<h1 className="text-xl font-bold">Invite your friends!</h1>
 					<div className="flex flex-row items-center space-x-2">
 						<p>Invite Code:</p>
@@ -68,21 +123,20 @@ const Invite: React.FC = () => {
 						</div>
 					<div className="w-full">
 						<p className="ml-4 mb-1 text-sm font-bold text-gray-500">Joined</p>
-						<ul className="max-h-96 w-full p-4 bg-gray-50 border border-gray-300 rounded-2xl overflow-y-auto">
+						<ul className="h-96 w-full p-4 bg-gray-50 border border-gray-300 rounded-2xl overflow-y-auto">
 						{users.map((user, index) =>
 							<li key={index} className="py-0.5"><span className="h-full bg-blue-50 p-0.5 rounded-full text-blue-600 mr-2 text-xs">{index + 1}</span><span>{user.user}</span></li>
 						)}
+						{(users.length <= 1 ? <li className="py-0.5 w-full text-center text-xs">Waiting for more people...</li> : null)}
 						</ul>
-						<p className="ml-4 mt-1 text-sm text-gray-500">{users.length} Participant{(users.length > 1 ? 's' : '')}</p>
+						<p className="ml-4 mt-1 text-sm text-gray-500">{users.length} Participant{(users.length == 1 ? '' : 's')}</p>
 					</div>
 					{(creator ?
 						<div className="w-full flex flex-col md:flex-row-reverse justify-center md:justify-start items-center">
-						{(users.length >= 1 ?
-							<Link href="/App/Decide">
-								<a className="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold">
-									Everyone's here!
-								</a>
-							</Link>
+						{(users.length > 1 ?
+							<button onClick={startSession} className="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold">
+								Everyone's here!
+							</button>
 							:
 							<button className="px-4 py-2 rounded-2xl bg-gray-600 text-gray-50 font-semibold" disabled aria-disabled>
 								Not Enough People!
@@ -95,15 +149,13 @@ const Invite: React.FC = () => {
 						</Link>
 					</div> : 
 					<div className="w-full flex flex-col md:flex-row-reverse justify-center md:justify-start items-center">
-						<Link href="/App/Join">
-							<a className="px-4 py-2 rounded-2xl bg-red-600 text-white font-semibold">
-								Leave
-							</a>
-						</Link>
+						<button onClick={participantLeft} className="px-4 py-2 rounded-2xl bg-red-600 text-white font-semibold">
+							Leave
+						</button>
 					</div>
 					)}
 				</div>
-			</div>
+			</Card>
 		</Layout>
 	)
 }
