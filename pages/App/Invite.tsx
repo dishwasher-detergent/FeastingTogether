@@ -11,7 +11,7 @@ import { useRouter  } from 'next/router';
 const Invite: React.FC = () => {
 	const [position, setPosition] = useState(1);
 	const [steps, setSteps] = useState(['Setup','Invite']);
-	const [users, setUsers] = useState<any[]>([]);
+	const [users, setUsers] = useState<any[] | null>([]);
 
 	const mountedRef = useRef(false)
 
@@ -124,16 +124,16 @@ const Invite: React.FC = () => {
 					<div className="w-full">
 						<p className="ml-4 mb-1 text-sm font-bold text-gray-500">Joined</p>
 						<ul className="h-96 w-full p-4 bg-gray-50 border border-gray-300 rounded-2xl overflow-y-auto">
-						{users.map((user, index) =>
+						{users!.map((user, index) =>
 							<li key={index} className="py-0.5"><span className="h-full bg-blue-50 p-0.5 rounded-full text-blue-600 mr-2 text-xs">{index + 1}</span><span>{user.user}</span></li>
 						)}
-						{(users.length <= 1 ? <li className="py-0.5 w-full text-center text-xs">Waiting for more people...</li> : null)}
+						{(users!.length <= 1 ? <li className="py-0.5 w-full text-center text-xs">Waiting for more people...</li> : null)}
 						</ul>
-						<p className="ml-4 mt-1 text-sm text-gray-500">{users.length} Participant{(users.length == 1 ? '' : 's')}</p>
+						<p className="ml-4 mt-1 text-sm text-gray-500">{users!.length} Participant{(users!.length == 1 ? '' : 's')}</p>
 					</div>
 					{(creator ?
 						<div className="w-full flex flex-col md:flex-row-reverse justify-center md:justify-start items-center">
-						{(users.length > 1 ?
+						{(users!.length > 1 ?
 							<button onClick={startSession} className="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold">
 								Everyone's here!
 							</button>
