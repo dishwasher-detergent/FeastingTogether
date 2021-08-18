@@ -17,6 +17,7 @@ const Join: React.FC = () => {
 	const [session, setSession] = useState('000000');
 	const [error, setError] = useState('');
 	const [nameWarning, setNameWarning] = useState(false)
+	const [sessionWarning, setSessionWarning] = useState(false)
 
 	const { set, session_id, user_id } = useSession.getState();
 
@@ -59,7 +60,7 @@ const Join: React.FC = () => {
 				setError(error)
 			}
 		} else {
-			setWarning('Invalid Invite Code!')
+			setSessionWarning(true)
 		}
 	}
 
