@@ -135,7 +135,7 @@ const Invite: React.FC = () => {
 						<div className="w-full flex flex-col md:flex-row-reverse justify-center md:justify-start items-center">
 						{(users!.length > 1 ?
 							<button onClick={startSession} className="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold">
-								Everyone's here!
+								Everyone&apos;s here!
 							</button>
 							:
 							<button className="px-4 py-2 rounded-2xl bg-gray-600 text-gray-50 font-semibold" disabled aria-disabled>
