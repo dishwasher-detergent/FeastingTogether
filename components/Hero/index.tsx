@@ -14,7 +14,7 @@ export default function Hero()
 					Helping you find the restaurant <b className="text-blue-600">everyone</b> will enjoy.
 				</p>
 			</div>
-			<div className="w-full flex flex-col-reverse md:flex-row justify-center md:justify-start items-center">
+			{/* <div className="w-full flex flex-col-reverse md:flex-row justify-center md:justify-start items-center">
 				<Link href="/App/Join">
 					<a className="px-4 py-2 rounded-2xl text-gray-900 font-semibold">
 						Join A Friend
@@ -25,7 +25,7 @@ export default function Hero()
 						Create Your Own
 					</a>
 				</Link>
-			</div>
+			</div> */}
 		</div>
 	)
 }
